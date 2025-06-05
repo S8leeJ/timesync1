@@ -8,6 +8,21 @@ Problems encountered:
 - Chosen Country would only display abbreviated term
     Solution: Stored the actual object of the country istead of it just being the country 
 
-
 Goals:
 - now actually add the time display for each country
+- clean up code and organize and digest 
+
+Goals:
+- Edit button -> Have the ability to delete a specific one, not just everything (more like checkbox on which ones to delete)
+- clear ONLY the checked ones (go through and interate over those ones and remove them)
+
+Notes:
+- use the filter tool, no need for iteration 
+
+Problem:
+- when deleting the first element in the list, the one behind it becomes checked
+Solution:
+- the problem was that the index kept on changing in the mapping function because of the delete
+- when the index was deleted, the next element takes that (index)
+- the mapping is depenent on the index itself ??? (needs futher explanation on this at another time)
+- changed it so it doesnt function on index's but keys

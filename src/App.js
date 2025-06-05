@@ -1,80 +1,108 @@
 import React, { useState } from 'react';
 import ct from 'countries-and-timezones';
+import { useEffect } from 'react';
+
 
 function App() {
-
-  const [countrySelected, setCountry] = useState(null);
-  //sets countrySelected as default as emtpy, think of it like a variable that needs to get updated
-  const [timezones, setTimezones] = useState([]);
-  //this is an array of different time zones for the future
-  const [chosenTimeZone, getChosenTimeZone] = useState(null);
   const allCountries = Object.values(ct.getAllCountries());
-  //get all countries but turns it into an array so it can get iterated over 
-  const [showSelection, setShowSelection] = useState([]);
+  //set the country (object)
+  const [countrySelected, setCountry] = useState(null);
+  //array of all of the timezones associated to each country
+  const [timezones, setTimezones] = useState([]);
+  //const to hold current chosenTimezone
+  const [chosenTimeZone, getChosenTimeZone] = useState(null);
+
   const [allChoices, setAllChoices] = useState([]);
 
+  const [now, setNow] = useState(new Date());
+
+  const [checked, setChecked] = useState({});
+
+  //get an array of the checked items
+  const selectedItems = allChoices.filter(choice =>
+    checked[`${choice.country}-${choice.timezone}`]
+  );
+
+  //updates the choices to only include nonChecked items whenever it is ran 
+  const handleSelectedClear = () => {
+    const updatedChoices = allChoices.filter(choice => !selectedItems.includes(choice));
+    setAllChoices(updatedChoices);
+    setChecked({});
+  }
+
+  //changes and sets the state of the check whenever clicked 
+  const handleCheckBox = (key) => {
+    setChecked(previous => ({
+      ...previous, [key]: !previous[key]
+    }));
+
+  }
+
+  //sets the country from the drop down event 
+  const countrySelectHandles = (e) => {
+    const country = e.target.value;
+    const selected = ct.getCountry(country);
+    setCountry(selected);
+    setTimezones(Object.values(ct.getTimezonesForCountry(country)));
+  };
+
+  //sets the timezone from the drop down event 
+  const timeZoneSelectHandles = (e) => {
+    const timeZone = e.target.value;
+    getChosenTimeZone(timeZone);
+  };
+
+  //sets an array of the selected country and timezone 
   const handleAddSelection = () => {
-    if(countrySelected && chosenTimeZone){
+    if (countrySelected && chosenTimeZone) {
       const newSelection = {
         country: countrySelected.name,
         timezone: chosenTimeZone
       };
       setAllChoices(prevChoices => [...prevChoices, newSelection])
-      console.log(allChoices);
     }
   }
 
+  //clears all of the selectedChoices and resets checks 
   const handleClear = () => {
     setAllChoices([]);
+    setChecked({});
   }
-  //event handler
-  const countrySelectHandles = (e) => {
-    const country = e.target.value;
-    //set var as selected country
-    const selected = ct.getCountry(country);
-    setCountry(selected);
-    //set chosen country to country selected
-    setTimezones(Object.values(ct.getTimezonesForCountry(country)));
-    //find timeZones for that country and set it equal to timezones
-  };
 
-  const timeZoneSelectHandles = (e) => {
-    const timeZone = e.target.value;
-    getChosenTimeZone(timeZone);
+  //for updating live times 
+  useEffect(() => {
+    const interval = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const getTimeForZone = (zone) => {
+    if (!zone) return null;
+    return new Intl.DateTimeFormat('en-US', {
+      timeZone: zone,
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    }).format(now);
   };
 
   return (
     <div style={{ padding: '4rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       <h1>TimeSync version #1</h1>
 
-      {/*first method, select country and get timezones*/}
-
       <label>select a country: </label>
       <select onChange={countrySelectHandles}>
-        {/* select dropdown every time it changes call the event handler*/}
         <option value="">---select a country---</option>
         {allCountries.map((country) => (
-          <option key={country.id} value = {country.id}>
+          <option key={country.id} value={country.id}>
             {country.name}
           </option>
         ))}
       </select>
 
-        {/* 
-          <h2>Timezone</h2>
-          <ul>
-            {timezones.map((timezone) =>(
-              <li key={timezone.name}>
-                {timezone.name} UTC {timezone.utcOffsetStr}
-              </li>
-            ))}
-          </ul> 
-        */}
-     
       <label>Select a timezone</label>
       <select onChange={timeZoneSelectHandles}>
         <option value="">---select a timezone---</option>
-        {timezones.map((timezone) =>(
+        {timezones.map((timezone) => (
           <option key={timezone.name} value={timezone.name}>
             {timezone.name};
           </option>
@@ -82,22 +110,27 @@ function App() {
       </select>
 
       <button onClick={handleAddSelection}>Add country here</button>
-      {/* {(
-        <>
-        <p>Chosen country: {countrySelected ? countrySelected.name : "None selected"} </p>
-        <p>Chosen Timezone: {chosenTimeZone}</p>
-        </>
-      )} */}
       <h2>All Choices Updated</h2>
       <ul>
-        {allChoices.map((choice, index) =>(
-          <li key={index}>
-            {choice.country} - {choice.timezone}
-          </li>
-        ))}
+        {allChoices.map((choice, index) => {
+          const key = `${choice.country}-${choice.timezone}-${index}`;
+          return (
+            <li key={key}>
+              <label>
+                <input
+                  type="checkbox"
+                  checked={checked[`${choice.country}-${choice.timezone}`]}
+                  onChange={() => handleCheckBox(`${choice.country}-${choice.timezone}`)}
+                />
+                {choice.country} - {choice.timezone}
+              </label>
+              <p>Local Time: {getTimeForZone(choice.timezone)}</p>
+            </li>
+          );
+        })}
       </ul>
-      
-      <button onClick={handleClear}> clear all chocies </button>
+      <button onClick={handleClear}> clear all choices </button>
+      <button onClick={handleSelectedClear}> clear selected choices </button>
     </div>
   );
 }
