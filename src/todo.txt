@@ -1,0 +1,13 @@
+Goals
+- first select country, then select the timezone, then it should populate the current time it is in that place when you press add
+- Make a list that saves when you press add country here, and added a clear all choices button 
+
+Problems encountered:
+- Chosen Timezone would not display
+    Solution: accidentally put e.target.values instead of value
+- Chosen Country would only display abbreviated term
+    Solution: Stored the actual object of the country istead of it just being the country 
+
+
+Goals:
+- now actually add the time display for each country
