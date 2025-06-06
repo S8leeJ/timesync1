@@ -24,5 +24,6 @@ Problem:
 Solution:
 - the problem was that the index kept on changing in the mapping function because of the delete
 - when the index was deleted, the next element takes that (index)
-- the mapping is depenent on the index itself ??? (needs futher explanation on this at another time)
-- changed it so it doesnt function on index's but keys
+
+Goals:
+- prevented duplicates using .some as a substitute for includes

@@ -11,11 +11,8 @@ function App() {
   const [timezones, setTimezones] = useState([]);
   //const to hold current chosenTimezone
   const [chosenTimeZone, getChosenTimeZone] = useState(null);
-
   const [allChoices, setAllChoices] = useState([]);
-
   const [now, setNow] = useState(new Date());
-
   const [checked, setChecked] = useState({});
 
   //get an array of the checked items
@@ -59,7 +56,11 @@ function App() {
         country: countrySelected.name,
         timezone: chosenTimeZone
       };
-      setAllChoices(prevChoices => [...prevChoices, newSelection])
+      if(!allChoices.some(choice =>
+        choice.country === newSelection.country && choice.timezone === newSelection.timezone
+      )){
+        setAllChoices(prevChoices => [...prevChoices, newSelection])
+      }
     }
   }
 
