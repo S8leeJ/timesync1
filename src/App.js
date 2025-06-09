@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import ct from 'countries-and-timezones';
 import { useEffect } from 'react';
+import './App.css';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 
 function App() {
@@ -56,9 +58,9 @@ function App() {
         country: countrySelected.name,
         timezone: chosenTimeZone
       };
-      if(!allChoices.some(choice =>
+      if (!allChoices.some(choice =>
         choice.country === newSelection.country && choice.timezone === newSelection.timezone
-      )){
+      )) {
         setAllChoices(prevChoices => [...prevChoices, newSelection])
       }
     }
@@ -87,52 +89,96 @@ function App() {
   };
 
   return (
-    <div style={{ padding: '4rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <h1>TimeSync version #1</h1>
+    <div className="App">
+      <div className="header">
 
-      <label>select a country: </label>
-      <select onChange={countrySelectHandles}>
-        <option value="">---select a country---</option>
-        {allCountries.map((country) => (
-          <option key={country.id} value={country.id}>
-            {country.name}
-          </option>
-        ))}
-      </select>
+        <div className="anim">
+          <DotLottieReact
+            src="https://lottie.host/17c75c4a-6533-404e-ae55-3d8bd7cd4608/jDEk3gXCqF.lottie"
+            autoplay
+            loop
+          />
+        </div>
 
-      <label>Select a timezone</label>
-      <select onChange={timeZoneSelectHandles}>
-        <option value="">---select a timezone---</option>
-        {timezones.map((timezone) => (
-          <option key={timezone.name} value={timezone.name}>
-            {timezone.name};
-          </option>
-        ))}
-      </select>
+        <div className="text">
+          <h1>TIMESYNC</h1>
+          <p>Connecting time and world</p>
+        </div>
+      </div>
 
-      <button onClick={handleAddSelection}>Add country here</button>
-      <h2>All Choices Updated</h2>
-      <ul>
-        {allChoices.map((choice, index) => {
-          const key = `${choice.country}-${choice.timezone}-${index}`;
-          return (
-            <li key={key}>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={checked[`${choice.country}-${choice.timezone}`]}
-                  onChange={() => handleCheckBox(`${choice.country}-${choice.timezone}`)}
-                />
-                {choice.country} - {choice.timezone}
-              </label>
-              <p>Local Time: {getTimeForZone(choice.timezone)}</p>
-            </li>
-          );
-        })}
-      </ul>
-      <button onClick={handleClear}> clear all choices </button>
-      <button onClick={handleSelectedClear}> clear selected choices </button>
-    </div>
+      <div className="addTime">
+        <div className="select">
+
+          <select className="selection" onChange={countrySelectHandles}>
+            <option value="">---Select a country---</option>
+            {allCountries.map((country) => (
+              <option key={country.id} value={country.id}>
+                {country.name}
+              </option>
+            ))}
+          </select>
+
+          <select className="selection" onChange={timeZoneSelectHandles}>
+            <option value="">---Select a timezone---</option>
+            {timezones.map((timezone) => (
+              <option key={timezone.name} value={timezone.name}>
+                {timezone.name};
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="addTimeButton">
+          <button className="button" onClick={handleAddSelection}>Add Time</button>
+        </div>
+      </div>
+
+      <div className="choices">
+        <h2>My Times</h2>
+        <button className="button" onClick={handleClear}> clear all choices </button>
+        <button className="button" onClick={handleSelectedClear}> clear selected choices </button>
+
+        <div className="selectedChoices">
+
+
+          {allChoices.map((choice, index) => {
+            const key = `${choice.country}-${choice.timezone}-${index}`;
+            return (
+              <div key={key} className="eachChoice">
+
+                <div className="showTime">
+                  <h1>{getTimeForZone(choice.timezone)}</h1>
+                </div>
+
+                <label>
+                  <div className="selectedText">
+                    <h2>
+                      {choice.country}
+                    </h2>
+                  </div>
+                  <div className="selectedText">
+
+                    {choice.timezone}
+
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={checked[`${choice.country}-${choice.timezone}`]}
+                    onChange={() => handleCheckBox(`${choice.country}-${choice.timezone}`)}
+                  />
+
+
+
+                </label>
+              </div>
+            );
+          })}
+
+        </div>
+
+      </div >
+
+
+    </div >
   );
 }
 
