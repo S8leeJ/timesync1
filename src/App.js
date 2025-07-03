@@ -7,7 +7,7 @@ function App() {
 
 
   return (
-    <div>
+    <div className='bg-gradient-to-br from-slate-900 via-blue-900 to-green-800'>
       <Router>
         <Navbar />
         <Routes>

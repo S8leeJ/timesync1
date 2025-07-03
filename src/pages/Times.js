@@ -81,7 +81,7 @@ export default function Times() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white flex flex-col items-center py-8">
+        <div className="min-h-screen text-white flex flex-col items-center py-8">
             <div className="w-full max-w-6xl mx-auto">
                 <div className="flex flex-col md:flex-row items-center justify-between rounded-1xl p-6 mb-8">
 
@@ -128,7 +128,7 @@ export default function Times() {
                             return (
                                 <div key={key} className="eachChoice bg-slate-900 rounded-xl p-4 flex flex-col md:flex-row items-center gap-4 shadow hover:shadow-xl transition">
                                     <div className="showTime flex-1 text-center">
-                                        <h1 className="text-3xl font-mono font-bold text-blue-400">{getTimeForZone(choice.timezone)}</h1>
+                                        <h1 className="text-3xl font-mono font-bold text-green-200">{getTimeForZone(choice.timezone)}</h1>
                                     </div>
                                     <label className="flex flex-col items-center md:items-start gap-1 flex-1">
                                         <span className="selectedText text-lg font-semibold">{choice.country}</span>
