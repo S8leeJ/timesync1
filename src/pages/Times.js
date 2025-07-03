@@ -129,17 +129,19 @@ export default function Times() {
                                 <div key={key} className="eachChoice bg-slate-900 rounded-xl p-4 flex flex-col md:flex-row items-center gap-4 shadow hover:shadow-xl transition">
                                     <div className="showTime flex-1 text-center">
                                         <h1 className="text-3xl font-mono font-bold text-green-200">{getTimeForZone(choice.timezone)}</h1>
+                                    
                                     </div>
                                     <label className="flex flex-col items-center md:items-start gap-1 flex-1">
                                         <span className="selectedText text-lg font-semibold">{choice.country}</span>
                                         <span className="selectedText text-blue-300 text-sm">{choice.timezone}</span>
-                                        <input
+                                         
+                                    </label>
+                                    <input
                                             type="checkbox"
-                                            className="mt-2 w-5 h-5 accent-blue-500"
+                                            className="mt-2 w-5 h-5 accent-blue-300"
                                             checked={checked[`${choice.country}-${choice.timezone}`]}
                                             onChange={() => handleCheckBox(`${choice.country}-${choice.timezone}`)}
                                         />
-                                    </label>
                                 </div>
                             );
                         })}
