@@ -1,109 +1,69 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-export default function Signin() {
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-    });
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-    };
+export default function SignIn() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch('http://localhost:5002/api/signin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        localStorage.setItem('token', data.token);
+        navigate('/Times');
+        alert('Sign in successful!');
+      } else {
+        alert(data.message || 'Sign in failed');
+      }
+    } catch (err) {
+      alert('Error connecting to server');
+    }
+  };
 
-    return (
-        <div className="min-h-screen flex items-center justify-center px-4">
-          <div className="max-w-md w-full space-y-8">
-            <div className="text-center">
-              <h2 className="text-4xl font-bold text-white mb-2">Welcome Back</h2>
-              <p className="text-gray-400">Sign in to your TimeSync account</p>
-            </div>
-    
-            <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-              {error && (
-                <div className="bg-red-500/20 border border-red-500 text-red-300 px-4 py-3 rounded-lg">
-                  {error}
-                </div>
-              )}
-    
-              <div className="space-y-4">
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-                    Email Address
-                  </label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 bg-black/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Enter your email"
-                  />
-                </div>
-    
-                <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
-                    Password
-                  </label>
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    required
-                    value={formData.password}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 bg-black/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Enter your password"
-                  />
-                </div>
-              </div>
-    
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <input
-                    id="remember-me"
-                    name="remember-me"
-                    type="checkbox"
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-600 rounded bg-black/50"
-                  />
-                  <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-300">
-                    Remember me
-                  </label>
-                </div>
-    
-                <div className="text-sm">
-                  <a href="#" className="text-blue-400 hover:text-blue-300">
-                    Forgot your password?
-                  </a>
-                </div>
-              </div>
-    
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
-              >
-                {isLoading ? 'Signing in...' : 'Sign In'}
-              </button>
-    
-              <div className="text-center">
-                <p className="text-gray-400">
-                  Don't have an account?{' '}
-                  <Link to="/signup" className="text-blue-400 hover:text-blue-300 font-medium">
-                    Sign up
-                  </Link>
-                </p>
-              </div>
-            </form>
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-green-800">
+      <div className="w-full max-w-md bg-slate-300 rounded-lg shadow-md p-8">
+        <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">Sign In</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-gray-700 mb-1">Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
           </div>
-        </div>
-      );
-    } 
+          <div>
+            <label className="block text-gray-700 mb-1">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition duration-200"
+          >
+            Sign In
+          </button>
+          <p className="text-center text-gray-500">Don't have an account? <Link to="/signup" className="text-blue-500 hover:text-blue-600">Sign Up</Link></p>
+          
+        </form>
+      </div>
+    </div>
+  );
+} 
