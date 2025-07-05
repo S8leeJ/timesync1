@@ -4,16 +4,19 @@ import Navbar from './components/Navbar';
 import Signin from './pages/Signin';
 import Signup from './pages/Signup';
 import ProtectedRoute from './components/ProtectedRoutes';
+import { AuthProvider } from './context/AuthContext';
 
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 
 function App() {
   return (
-    <div className='bg-gradient-to-br from-slate-900 via-blue-900 to-green-800'>
-      <Router>
-        <AppContent />
-      </Router>
-    </div>
+    <AuthProvider>
+      <div className='bg-gradient-to-br from-slate-900 via-blue-900 to-green-800'>
+        <Router>
+          <AppContent />
+        </Router>
+      </div>
+    </AuthProvider>
   );
 }
 

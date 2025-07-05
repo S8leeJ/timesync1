@@ -1,38 +1,42 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-
-
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const res = await fetch('http://localhost:5002/api/signin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        localStorage.setItem('token', data.token);
-        navigate('/Times');
-        alert('Sign in successful!');
-      } else {
-        alert(data.message || 'Sign in failed');
-      }
-    } catch (err) {
-      alert('Error connecting to server');
+    setError('');
+    setLoading(true);
+
+    const result = await login(email, password);
+    
+    if (result.success) {
+      navigate('/times');
+    } else {
+      setError(result.message || 'Sign in failed');
     }
+    
+    setLoading(false);
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-green-800">
       <div className="w-full max-w-md bg-slate-300 rounded-lg shadow-md p-8">
         <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">Sign In</h2>
+        
+        {error && (
+          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            {error}
+          </div>
+        )}
+        
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-gray-700 mb-1">Email</label>
@@ -56,12 +60,14 @@ export default function SignIn() {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition duration-200"
+            disabled={loading}
+            className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white font-semibold py-2 px-4 rounded transition duration-200"
           >
-            Sign In
+            {loading ? 'Signing In...' : 'Sign In'}
           </button>
-          <p className="text-center text-gray-500">Don't have an account? <Link to="/signup" className="text-blue-500 hover:text-blue-600">Sign Up</Link></p>
-          
+          <p className="text-center text-gray-500">
+            Don't have an account? <Link to="/signup" className="text-blue-500 hover:text-blue-600">Sign Up</Link>
+          </p>
         </form>
       </div>
     </div>
