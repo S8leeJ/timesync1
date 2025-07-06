@@ -29,8 +29,10 @@ export default function SignUp() {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-green-800">
-            <div className="w-full max-w-md bg-slate-300 rounded-lg shadow-md p-8">
-                <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">Sign Up</h2>
+            <div className="w-full max-w-md rounded-lg p-8 bg-slate-900/40 backdrop-blur-md shadow-md shadow-blue-900"> 
+                
+                <h1 className="text-4xl font-bold mb-2 text-center text-white">Create Account</h1>
+                <p className="text-1xl font-light mb-6 text-center text-blue-200">Sign Up for your TimeSync account</p>
                 
                 {error && (
                     <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
@@ -38,25 +40,27 @@ export default function SignUp() {
                     </div>
                 )}
                 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-5">
                     <div>
-                        <label className="block text-gray-700 mb-1">Email</label>
+                        <label className="block text-gray-200 mb-2">Email Address</label>
                         <input
                             type="email"
                             value={email}
                             onChange={e => setEmail(e.target.value)}
                             required
-                            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            placeholder="Enter your email address"
+                            className="w-full px-3 py-2 border bg-slate-300 border-blue-900 placeholder:text-blue-900 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
                         />
                     </div>
                     <div>
-                        <label className="block text-gray-700 mb-1">Password</label>
+                        <label className="block text-gray-200 mb-2">Password</label>
                         <input
                             type="password"
                             value={password}
                             onChange={e => setPassword(e.target.value)}
                             required
-                            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            placeholder="Enter your password"
+                            className="w-full px-3 py-2 border bg-slate-300 border-blue-900 placeholder:text-blue-900 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
                         />
                     </div>
                     <button
@@ -66,11 +70,11 @@ export default function SignUp() {
                     >
                         {loading ? 'Signing Up...' : 'Sign Up'}
                     </button>
-                    <p className="text-center text-gray-500">
+                    <p className="text-center text-gray-200">
                         Have an account? <Link to="/" className="text-blue-500 hover:text-blue-600">Sign In</Link>
                     </p>
                 </form>
             </div>
         </div>
     );
-} 
+}
